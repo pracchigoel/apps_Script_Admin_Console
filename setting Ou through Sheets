@@ -1,0 +1,31 @@
+function settingOu(){
+    const ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const data = ss.getDataRange().getValues();
+
+    //this is the customer id of te ==he domain registered with Google Workspace "Accounts >> Account Settings"
+    const customerId = 'my_customer';
+
+    for(let i= 1; i< data.length; i++){
+        let name = data[i][0];
+        let parentPath = data[i][1];
+        let description = data[i][2];
+
+        if(!name) continue;
+
+        let ouResource = {
+            name: name,
+            parentOrgUnitPath : parentPath,
+            description: description
+        };
+
+        try{
+            AdminDirectory.Orgunits.insert(ouResource, customerId);
+            console.log(`Created ${parentPath  === '/' ? '' : parentPath}/${name}`);
+            
+        } catch(e){
+            if(e.message.includes(`already exists`)){
+                console.log(`Skipping: ${name} already exists`)
+            } else{
+                console.log(`Error creating ${name}: ${e.message}`)
+            }
+        }
