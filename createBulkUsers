@@ -1,0 +1,27 @@
+function bulkCreate(){
+    const ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const data = ss.getDataRange().getValues();
+
+    for(let i= 1; i< data.length; i++){
+        let firstname = data[i][0];
+        let lastname = data[i][1];
+        let primaryEmail = data[i][2];
+        let password = data[i][3];
+
+        let userResource = {
+            primaryEmail: primaryEmail,
+            name: {
+                givenName: firstname,
+                familyName: lastname
+            },
+            password: password,
+            changePasswordAtNextLogin: true
+        };
+        try{
+            AdminDirectory.Users.insert(userResource);
+            console.log('User created: ' + primaryEmail)
+        } catch(e){
+            console.log("Error Creating: " + primaryEmail + ": " + e.message)
+        }
+    }
+}
