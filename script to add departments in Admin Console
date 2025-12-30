@@ -1,0 +1,25 @@
+function setupDemoEnv(){
+    const departments = ['Engineering', 'Marketing', "Sales", "IT", "Human Resources"];
+    const customerId = "my_customer";
+
+    departments.forEach(dept => {
+        try{
+            const ouResource = {
+                name : dept,
+                parentOrgUnitPath: '/',
+                description: `Department OU for ${dept}`
+            };
+
+            AdminDirectory.Orgunits.insert(ouResource, customerId);
+            console.log(`Successfully created: ${dept}`)
+
+        } catch(e){
+           if(e.message.includes(`already exists`)){
+            console.log(`Skipping: ${dept} as already exists.`);
+           } else{
+            console.log(`Failed to create ${dept}: ${e.message}`)
+           }
+        }
+    });
+
+}
