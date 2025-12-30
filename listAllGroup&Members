@@ -1,0 +1,22 @@
+function listAllGroupsAndMembers() {
+  let groups = AdminDirectory.Groups.list({customer: 'my_customer'}).groups;
+  
+  if (!groups) {
+    console.log('No groups found.');
+    return;
+  }
+
+  groups.forEach(group => {
+    console.log('--- Group: ' + group.email + ' ---');
+    try {
+      let members = AdminDirectory.Members.list(group.email).members;
+      if (members) {
+        members.forEach(member => console.log(' Member: ' + member.email));
+      } else {
+        console.log(' No members found.');
+      }
+    } catch (e) {
+      console.log(' Error fetching members: ' + e.message);
+    }
+  });
+}
